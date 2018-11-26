@@ -1,3 +1,6 @@
+#specific to this repo, do not sync output that can be recomposed
+*.tex
+
 # History files
 .Rhistory
 .Rapp.history
