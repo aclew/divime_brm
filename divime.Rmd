@@ -3,7 +3,7 @@ title             : "Open-source, automatic speech analyses for long audio-recor
 shorttitle        : "Speech analyses for long audio-recordings"
 
 author: 
-  - name          : "Authors Interspeech (need to add and perhaps remove): Adrien Le Franc, Eric Riebling, Julien Karadayi, Yun Wang, Camila Scaff, Florian Metze, Okko Rasanen, Alejandrina Cristia"
+  - name          : "Authors to be defined"
     affiliation   : "1"
     corresponding : yes    # Define only one corresponding author
     address       : "29, rue d'Ulm, 75005, Paris, France"
@@ -79,7 +79,7 @@ x
 ## Info for us
 
 ### Authorship
-- Author-level contributions: To be completed based on completed todo below!
+- Author-level contributions: To be completed in discussion with people contributing code, analysis, writing...
 - Acknowledgements/citations only:
     - AlF, ER, & JK contributed ancillary code still in use; note that all three are coauthors in Interspeech paper, so they could be acknowledged in BRM without being coauthors
     - All tools should be properly cited in the DiViMe site and the paper so their authors will not by default be coauthors of this paper
@@ -87,16 +87,16 @@ x
 
 ### Todo/done
 
-- get all the sound files and rttms to oberon
-- run the analyses and calculate the results for role diarization
-- compare that to LENA
-- incorporate ADS/CDS into divime with Wassim
-- incorporate new VCM into divime with Marvin
 - run the analyses for talker diarization just to check it works
 - run the ana for VCM just to check it works
 - run the ana for WCE just to check it works
-- run the ana for ADS/CDS just to check it works
+- run the eval just to check it works
 - report any bugs or inaccuracies
+- add the 4-class model (perhaps remove the yunitators) with Marvin
+- run the analyses and calculate the results for role diarization
+- compare that to LENA
+- incorporate ADS/CDS into divime with Wassim
+- run the ana for ADS/CDS just to check it works
 - update the recipe section
 
 ## Introduction
@@ -157,10 +157,9 @@ CUMULATIVE SCIENCE
 
 #### Installation
 
-The VM is designed with Vagrant @vagrant, which is a tool enabling to build and manage virtual machine environments. It comes with a Vagrantfile script which contains the core architecture of the computing system to be deployed. Based on this file, Vagrant runs the virtual environment on top of usual providers such as VirtualBox @virtualbox or Docker @docker. We provide a stable Vagrantfile which enables us to easily build and run a Ubuntu virtual machine isolated from the hosting computer system. The resulting environment runs on any local machine regardless of the hosting operating system. It installs all required dependencies to have the speech processing tools introduced in this paper working inside the VM. 
+The VM is designed using Vagrant @vagrant, which is a tool enabling to build and manage virtual machine environments. The VM is completely specified through a Vagrantfile script which contains the core architecture of the computing system to be deployed. Based on this file, Vagrant runs the virtual environment on top of usual providers such as VirtualBox @virtualbox (a Docker @docker version is under development). We provide a stable Vagrantfile which automatically builds and run a Ubuntu virtual machine isolated from your local hosting computer. The resulting environment runs on any local machine regardless of its operating system. It contains all required dependencies and speech processing tools introduced in this paper. The detailed instructions for installing the VM are in https://divime.readthedocs.io/.
 
-
-The only way to commute files between the VM and the local supporting machine is a synced folder enabling to transfer data from the host to the VM and results from the VM back to the host. The basic workflow of the VM is summarized in the schematic diagram of Figure~\ref{fig:figure1}.
+The VM is completely isolated from the local host, but can exchange files via shared folders that are viewed by both the VL and the local host. For instance, the ```data``` folder enables to transfer data from the host to the VM and results from the VM back to the host. The basic workflow of the VM is summarized in the schematic diagram of Figure~\ref{fig:figure1}.
 
 
 ![ Schematic diagram of data flow in DiViMe. Significant inputs and outputs (as well as log files) of the individual tools are being read from and written to synced folders of the host computer. Processing is triggered via shell commands, on the host machine.](prezi.png)
@@ -169,7 +168,9 @@ The only way to commute files between the VM and the local supporting machine is
 
 #### Application
 
-Once the installation is complete, the tools that the VM provides can be applied to data files on the user's host machine with a series of simple shell commands (e.g., ```vagrant ssh -c "tools/TOOLNAME data/"```). We provide users with a detailed README available on our public repository where the software can be downloaded divime.readthedocs.io. As an example, a user would issue the following commands to annotate some new data:
+
+Once the installation is complete, the tools that the VM provides can be applied to data files on the user's host machine with a series of simple shell commands (e.g., ```vagrant ssh -c "tools/TOOLNAME data/"```). We provide users with an on-line documentation in https://divime.readthedocs.io/. ^[There is also a local version of the documentation in the shared directory ```docs```. The source  files are in ``` docs/source```, and the html in ```docs/build/html/index.html```. It can be recompiled through the VM through ```vagrant ssh -c "cd /vagrant/docs; make html"```.] 
+
 
 
 ```
@@ -210,7 +211,7 @@ The current DiViMe  builds exclusively on tools that have been developed, docume
 
 #### Voice Activity Detection
 
-We currently provide four options for Voice Activity Detection (VAD) tools. The first is the _LDC SAD_ @ldc-sad, which relies on HTK @young2002htk to band-pass filter and extract PLP features, prior to applying  a broad phonetic class recognizer trained on the Buckeye Corpus @pitt2005buckeye using a GMM-HMM model. An official release by the LDC is currently in the works, and should be ready by the time Interspeech is held.
+We currently provide four options for Voice Activity Detection (VAD) tools. The first is the _LDC SAD_ [@ldc-sad], which relies on HTK @young2002htk to band-pass filter and extract PLP features, prior to applying  a broad phonetic class recognizer trained on the Buckeye Corpus @pitt2005buckeye using a GMM-HMM model. An official release by the LDC is currently in the works, and should be ready by the time Interspeech is held.
 
 
 Our second VAD tool will be referred to as _Noiseme SAD_ because it draws from a broader ``noiseme classifier'' @wang2017first, a neural network that can predict frame-level probabilities of 17 types of sound events (called ``noisemes'' @burgernoisemes), including speech, singing, engine noise, etc. The network consists of one single bidirectional LSTM layer with 400 hidden units in each direction. It was trained on 10h of HAVIC data @havic with the Theano toolkit which we will change in the future since this framework is no longer maintained. The OpenSMILE toolkit @eyben2013recent is used to extract 6,669 low-level acoustic features, which are reduced to 50 dimensions with PCA. For our purposes, we summed the probabilities of the classes ``speech'' and ``speech non-english'' and labeled a region as speech if this probability was higher than all others.
