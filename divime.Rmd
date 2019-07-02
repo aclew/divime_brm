@@ -3,7 +3,7 @@ title             : "Open-source, automatic speech analyses for long audio-recor
 shorttitle        : "Speech analyses for long audio-recordings"
 
 author: 
-  - name          : "Authors Interspeech (need to add and perhaps remove): Adrien Le Franc, Eric Riebling, Julien Karadayi, Yun Wang, Camila Scaff, Florian Metze, Alejandrina Cristia"
+  - name          : "Authors Interspeech (need to add and perhaps remove): Adrien Le Franc, Eric Riebling, Julien Karadayi, Yun Wang, Camila Scaff, Florian Metze, Okko Rasanen, Alejandrina Cristia"
     affiliation   : "1"
     corresponding : yes    # Define only one corresponding author
     address       : "29, rue d'Ulm, 75005, Paris, France"
@@ -17,13 +17,13 @@ affiliation:
 
 
 abstract: >
-  Recent years have seen the emergence of hardware facilitating daylong, child-centered audio-recordings. A major roadblock remains: Open-source, improvable software for annotating such massive dataset. In this paper, we present a first attempt to overturn this roadblock. Our system uses Virtual Machine technology, which allows packaging diverse computer code into a unit that is both self-installing and multi-platform. The current version contains functional speech activity detector and diarization routines, which themselves have been drawn from open-source software. Performance of this system is compared against a current benchmark, the LENA \textsuperscript{TM} system
+  Recent years have seen the emergence of hardware facilitating daylong, child-centered audio-recordings. A major roadblock remains: Open-source, improvable software for annotating such massive datasets. In this paper, we present a first attempt to overturn this roadblock. Our system uses Virtual Machine technology, which allows packaging diverse computer code into a unit that is both self-installing and multi-platform. The current version contains a competitive set of tools including voice activity detection, talker kind diarization, classification of adult speech into child- versus adult-directed, unsupervised diarization routines, and syllable count estimation, which themselves have been drawn from open-source software. Performance of this system is compared against a current benchmark, the LENA\textsuperscript{TM} system. The present report together with the open source code it is based on could be used to extend this approach to other populations.
 
 
 
 
 keywords          : "Audio-recordings, Speech technology, Language production"
-wordcount          : "The median number of published pages is 12 in this journal"
+wordcount          : "The median number of published pages is 12 in this journal, so aim for 24 in this format, counting references"
 
 bibliography      : ["divime.bib"]
 
@@ -82,42 +82,34 @@ x
 - Author-level contributions: To be completed based on completed todo below!
 - Acknowledgements/citations only:
     - AlF, ER, & JK contributed ancillary code still in use; note that all three are coauthors in Interspeech paper, so they could be acknowledged in BRM without being coauthors
-    - All tools should be properly cited in the DiViMe site and the paper → their authors will not by default be coauthors of this paper
-    - All datasets should be properly cited (in the DiViMe site if routinely used) and the paper → their authors will not by default be coauthors of this paper
+    - All tools should be properly cited in the DiViMe site and the paper so their authors will not by default be coauthors of this paper
+    - All datasets should be properly cited (in the DiViMe site if routinely used) and the paper so their authors will not by default be coauthors of this paper
 
 ### Todo/done
 
-- In progress Tool integration (ER, JK + tool developers?)
-- Missing report on role assignment (FM) > separate paper?
-- Missing report on CDS/ADS (FR) > separate paper?
-- Missing evaluation of WCE (OR) > separate paper?
-- In progress Finish development of alternative processing for long files (ER, JK)
-- In progress Finish generation of tests (JK)
-- In progress Issue solving on github (ER)
-- In progress Routines to visually display and summarize results (AC?)
-- WAITING hold a couple of webinars to get feedback from users (??)
-- WAITING Run experiments to do all evaluations mentioned below (??)
-- WAITING Incorporate test results to manuscript below (??)
-- In progress Global architecture (AC)
-- In progress Check BRM’s rules & write first draft  (AC)
+- get all the sound files and rttms to oberon
+- run the analyses and calculate the results for role diarization
+- compare that to LENA
+- incorporate ADS/CDS into divime with Wassim
+- incorporate new VCM into divime with Marvin
+- run the analyses for talker diarization just to check it works
+- run the ana for VCM just to check it works
+- run the ana for WCE just to check it works
+- run the ana for ADS/CDS just to check it works
+- report any bugs or inaccuracies
+- update the recipe section
 
 ## Introduction
 
-Research projects in linguistics, speech pathology, and other language sciences often collect and compare ecological data from different cultures and settings with a diverse set of recording devices. Recent years have seen the emergence of "daylong recordings", whereby researchers build datasets containing hundreds, often thousands of hours, of audiorecordings gathered with device worn by a person as they go about their normal day. The resulting, highly heterogeneous speech corpora truly deserve the ``in the wild'' label, and have been shown to test the limitations of even state-of-the-art speech processing algorithms @dihard. Moreover, there is basically no tool that is both open source and easy to use. In this paper, we present DiViMe, a virtual machine which (a) contains tools allowing broad, first-pass annotation of audiofiles in a completely automatized manner, (b) is easy to use, and (c) can be augmented in the future, in an open source manner. In addition to presenting this tool, we provide a systematic review of the literature evaluating the only similar tool available to researchers, and propose a specific benchmark for future developments. 
+Research projects in linguistics, speech pathology, and other language sciences often collect and compare ecological data from different cultures and settings with a diverse set of recording devices. Recent years have seen the emergence of "daylong recordings", whereby researchers build datasets containing hundreds, often thousands of hours, of audiorecordings gathered with device worn by a person as they go about their normal day. The resulting, highly heterogeneous speech corpora truly deserve the ``in the wild'' label, and have been shown to test the limitations of even state-of-the-art speech processing algorithms @dihard. Moreover, there is basically no tool that is both open source and easy to use. In this paper, we present DiViMe, a virtual machine which (a) contains tools allowing broad, first-pass annotation of audiofiles in a completely automatized manner, (b) is easy to use, and (c) can be augmented in the future, in an open source manner. 
 
 ## The LENA^TM^ Revolution
 
-perhaps refer to earlier datasets and how people preferred targeted tasks over sampling of everyday life because of hassle of annotating very long recordings  
+The field of language development has a long and fruitful history of reliance on data, including recorded data when the technology became available. With just a few exceptions, the most common format for data collection involved visiting families in their home and taping the child for an hour or so, often repeating such visits periodically. An interest in the child's production often led to prioritizing language-rich moments, by asking caregivers to interact with the child using some prop chosen to stimulate talk and interaction. While such data are invaluable, they cannot capture faithfully the sparse interactions that are probably most common in children's lives.
 
-Talk about the rise of daylong recordings, LENA in particular
+This changed two decades ago, when the LENATM Foundation developed a sturdy recording device that could collect audio for 16 hours at a time, and a set of software that can automatically analyze such long recordings. While there were other researchers who had started collecting these person-centric, long-form recordings [@ear;@others], the LENA Foundation's research was groundbreaking because it brought this technology within the reach to many more researchers, notably those who could not afford to do manual annotation of these extensive audio data. 
 
-Talk about change in mindset thanks to the LENA success, from close linguistic transcription to 'verbal behavior'
-
-Expand to mention other early adopters, such as EAR and Hansen
-
-Expand further to refer to ongoing large-scale projects, such as Apollo, and other ideas, such as everyday monitoring for patients
-
-Conclude: All of these tasks would be aided by a broad, first-pass annotation that singles out vocalizations by the person wearing the recorder versus others, which would further provide broad strokes on everyday language use by and around that person.
+With it came also a change in mindset, shifting focus from the socially, pragmatically, and linguistically informed annotations that could only be produced by highly trained assistants, to a view more appropriate to big data, and a focus on verbal behavior more generally. When viewed in this way, verbal behavior in particular, and the analysis of participant-centered sound scapes, may be relevant at all stages of life, but particularly useful for individuals diagnosed with psychological or neurodegenerative disorder. All of these goals would be aided by a broad, first-pass annotation that singles out vocalizations by the person wearing the recorder versus others, which would further provide broad strokes on everyday language use by and around that person.
 
 ## Producing broad, first-pass annotations is not a trivial task
 
@@ -125,9 +117,14 @@ The difficulties in processing data such as child speech in a daily-life environ
 
 ## Available tools
 
-Some tools not available, LENA, Hansen, and others. Complex tools might lead to excellent performance, but do not benefit the larger scientific community as they should if they cannot be easily applied to reproduce experiments and to build on top of them. 
+LENA is available for a fee. A systematic review and targeted data analysis reveals performance not very good, particularly for other children and male adults. Some derived metrics are also not very good
 
-Some excellent tools available, flexible, etc. But challenging to use. Kaldi recipes.  installing and running such code is not always straightforward. In particular, integrating an open-source project into a local processing pipeline is a challenging task since file formats and environment settings might differ from one tool to another.
+TABLE SUMMARIZING LENA SCORES ON DIFFERENT METRICS, AGAINST OUR SCORES ON SAME METRICS
+table can also convey that we have some metrics lena doesn´t and vice versa
+
+Thus, there is room for improvement both in terms of availability for researchers with limited funding, and of accuracy. Complex tools might lead to excellent performance, but do not benefit the larger scientific community as they should if they cannot be easily applied to reproduce experiments and to build on top of them. 
+
+Some excellent tools available, flexible, etc. But challenging to use. Kaldi recipes.  installing and running such code is not always straightforward. In particular, integrating an open-source project into a local processing pipeline is a challenging task since file formats and environment settings might differ from one tool to another. Moreover, we have found training to be crucial as this is a very new and different domain, and thus free solutions do not work well. One definitely needs to retrain.
 
 Other tools available and very easy to use (WebMaus), but cannot cope with these specific recordings, with their speaker changes, mumbling, lack of transcription, etc. 
 
@@ -135,17 +132,6 @@ Other tools available and very easy to use (WebMaus), but cannot cope with these
 - LIUM in VM
 
 Introduce  the Speech Recognition Virtual Kitchen repository @srvk. 
-
-## The problem of evaluation
-
-should we have a section that: 
-
-Summarize previous work evaluating LENA
-Explain different evaluation metrics & why the above picture is incomplete
-Discuss how sampling may affect performance & why random sampling is desirable for generalizability
-
-
-
 
 ## Present project goals
 
@@ -183,7 +169,7 @@ The only way to commute files between the VM and the local supporting machine is
 
 #### Application
 
-Once the installation is complete, the tools that the VM provides can be applied to data files on the user's host machine with a series of simple shell commands (e.g., ```vagrant ssh -c "tools/TOOLNAME data/"```). We provide users with a detailed README available on our public repository where the software can be downloaded https://github.com/aclew/DiViMe. As an example, a user would issue the following commands to annotate some new data:
+Once the installation is complete, the tools that the VM provides can be applied to data files on the user's host machine with a series of simple shell commands (e.g., ```vagrant ssh -c "tools/TOOLNAME data/"```). We provide users with a detailed README available on our public repository where the software can be downloaded divime.readthedocs.io. As an example, a user would issue the following commands to annotate some new data:
 
 
 ```
@@ -244,11 +230,11 @@ MISSING REFERENCE TO PAPER BY OKKO ET AL INTRODUCING THE WCE IN TECHNICAL TERMS
 
 Once the talker diarization phase has been completed, the next phase of analysis will depend completely on the user base. Often, the next step must be to decide which speaker is the person who wore the recorder, and to assign typical roles to those around him/her. For the user base we are building on, this entails distinguishing the "target child" from other children and from adults, so as to be able to perform specialized analyses of language produced versus experienced by the target child. Other user bases will have other typical roles, for instance "patient" versus "caregiver". Since an adult patient and an infant have very different voices, it is impossible to build a "role assignment" tool that will work for every user base. This step can only be done cooperating with the relevant research community, so that the latter provides annotated data on which acoustic models can be trained to make the classification.
 
-Therefore, we focus here on the classification that has already been trained and is made available within DiViMe today, namely one in which the target child is distinguished from others in the environment. This tool can be applied to the output of the talker diarization step, or directly to the original audio files. 
+Therefore, we focus here on the classification that has already been trained and is made available within DiViMe today, namely one in which the audio is parsed into the following categories: target child (the one wearing the device), other children, female adult, male adult. 
 
-MISSING REFERENCE TO PAPER BY FLORIAN ET AL INTRODUCING THE CLASSIFIER IN TECHNICAL TERMS
+MISSING REFERENCE TO PAPER INTRODUCING THE CLASSIFIER IN TECHNICAL TERMS
 
-Similarly, other classification tasks may be desirable for specific talker roles. DiViMe includes two such tools.  
+Similarly, other classification tasks may be desirable for specific talker roles. DiViMe includes three such tools.  
 
 MISSING REFERENCE TO PAPER BY FRANK ET AL INTRODUCING THE ADS/CDS CLASSIFIER IN TECHNICAL TERMS
 
@@ -262,15 +248,15 @@ ADD DESCRIPTION OF STATISTICS/SUMMARY TOOL
 Finally, we have evaluation tools for each task noted above. We have tried to stay close the speech technology literature, and re-use available code for evaluation as well. This was important to us because we wanted to make sure that our results were widely interpretable and comparable against established benchmarks.
 
 
-For _VAD_, we employ the evaluation included in the LDC SAD @ldc-sad, which returns the false alarm (FA) rate (proportion of frames labeled as vocalizations that were not vocalizations in the gold annotation) and missed speech rate (proportion of frames labeled as non-vocalizations that were in fact vocalizations in the gold annotation). Frames are alzays 100 ms long.
+For voice activity detection, we employ code included in pyannote @pyannote, which returns the false alarm (FA) rate (proportion of frames labeled as vocalizations that were not vocalizations in the gold annotation) and missed speech rate (proportion of frames labeled as non-vocalizations that were in fact vocalizations in the gold annotation). Frames are always 10 ms long.
 
-For _TD_, we employ the evaluation developed for the DiHARD Challenge @td-eval, which returns a Diarization error rate (DER), which sums percentage of speaker error (mismatch in speaker IDs), false alarm vocalizations (non-vocalizations segments assigned to a speaker) and missed vocalizations (unassigned vocalizations). 
+For role and talker diarization, we report, in addition to false alarm and miss rates, the confusion rate, which establishes the ratio of frames labeled as the wrong speaker.
 
-One important consideration is in order: What to do with files that have no speech to begin with, or where the system does not return any speech at the VAD stage or any labels at the TD stage. This is not a case that is often discussed in the literature because recordings are typically targeted at moments where there is speech. However, in naturalistic recordings, some extracts may not contain any speech activity, and thus one must adopt a coherent framework for the evaluation of such instances. We opted for the following decisions. 
+One important consideration is in order: What to do with files that have no speech to begin with, or where the system does not return any speech at the VAD stage or any labels at the TD stage. This is not a case that is often discussed in the literature because recordings are typically targeted at moments where there is speech. However, in naturalistic recordings, some extracts may not contain any speech activity, and thus one must adopt a coherent framework for the evaluation of such instances. Notice that since all of the ratios above have the amount of speech in the reference as denominator, all of them are undefined when there is no speech.
 
-If the gold annotation was empty, and the VAD system returned no speech labels, then the FA = 0 and M = 0; but if the VAD system returned some speech labels, then FA = 100 and M = 0. Also, if the gold annotation was not empty and the system did not find any speech, then this was treated as FA = 0 and M = 100.
+We opted for the following decisions. If the gold annotation was empty, and the VAD system returned no speech labels, then the FA = 0 and M = 0; but if the VAD system returned some speech labels, then FA = 100 and M = 0. Also, if the gold annotation was not empty and the system did not find any speech, then this was treated as FA = 0 and M = 100.
 
-As for the TD evaluation, the same decisions were used above for FA and M, and the following decisions were made for mismatch. If the gold annotation was empty, regardless of what the system returned, the mismatch rate was treated as 0. If the gold annotation was empty but a pipeline returned no TD labels (either because the VAD in that system did not detect any speech, or because the diarization failed), then this was penalized via a miss of 100 (as above), but not further penalized in terms of talker mismatch, which was set at 0.
+As for talker diarization evaluation, the same decisions were used above for FA and M, and the following decisions were made for confusion. If the gold annotation was empty, regardless of what the system returned, the mismatch rate was treated as 0. If the gold annotation was empty but a pipeline returned no TD labels (either because the VAD in that system did not detect any speech, or because the diarization failed), then this was penalized via a miss of 100 (as above), but not further penalized in terms of talker mismatch, which was set at 0.
 
 The same DER system was applied to the evaluation of the other classification tasks, namely talker role attribution, addressee estimation, and vocal maturity. By and large, misses and false alarms will carry over from the front-end segmentation tasks, and categorization error reflects inaccuracies of frame labeling.
 
@@ -281,10 +267,7 @@ Finally, there is no standard system for evaluating syllable count estimations. 
 
 We conducted several experiments to test and benchmark the tools currently included in DiViMe. To this end, we used XXX TO BE REVISED datasets, as follows. 
 
-- ACLEW Starter-English Plus (ASE+; 3h): The ACLEW Starter dataset @aclewstarter contains 11 5-minute clips extracted from as many daylong recordings gathered with a LENA^TM^ device from English-speaking children growing up in urban areas in the UK @lucid, the US @bergelson,@warlaumont, and Canada @soderstrom. Melanie Soderstrom's team additionally annotated 8 5-minute clips from as many recordings @soderstrom. Clips were extracted from regions with a lot of speech. Annotators attempted to label  speakers as a function of their individual identity, although they did not know the recorded families.
 - Tsimane (9h): A total of 537 1-minute clips were extracted from 1-2 daylong recordings gathered from 27 children learning Tsimane in rural Bolivia @tsi. Of these, 227 came from LENA^TM^ recordings (henceforth Tsi-LENA), and the remaining 310 from other devices (USB or Olympus; henceforth Tsi-other). Clips were sampled periodically throughout the day to avoid sampling bias. Speakers were labeled using broad classes (children, female adults, male adults), with the exception of the child wearing the recorder and the most common female adult voice. The annotator did not know the recorded families.
-- Casillas (10h): A total of 190 1-, 5-, or 6-minute clips were extracted from daylong recordings gathered from 10 children learning Tseltal in rural Mexico using an Olympus recorder. Some of the clips were extracted randomly throughout the day; others targeted regions with a lot of speech by the child, or a lot of conversational interactions. Annotators knew the recorded families well and were able to label speakers as a function of their individual identity.  
--  DiHARD (21h): The DiHARD Evaluation data set contains 5-10 minute clips sampled from heterogeneous corpora including recordings similar to those in ASE+ but also meeting data, and many others. More details can be found on the Challenge website http://coml.lscp.ens.fr/dihard/data.html. To our knowledge, annotators attempted to label the (unknown) speakers as a function of their individual identity.
 
 
 Results for VAD at the time of final submission are shown on \ref{tabsadFA} and \ref{tabsadM}; those for TD are shown on \ref{tabdia}. Recordings not collected with LENA^TM^ hardware cannot be analyzed with the LENA^TM^ software, and thus such combinations are shown as NA below.
@@ -414,14 +397,9 @@ Second, we can compare the tools in DiViMe against the leaderboard of the Challe
 
 
 
-#### ADS/CDS
-
 #### Other tools
 
-no challenge yet on VCM (hopefully in process of organization!)
-
-no challenge yet on WCE
-
+They are state of the art and thus not evaluated here.
 
 ## Conclusions
 
